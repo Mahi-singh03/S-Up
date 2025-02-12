@@ -84,8 +84,8 @@ userSchema.pre('save', async function(next) {
 
   const currentYear = new Date().getFullYear();
   
-  // Find the last student to get the last roll number
-  const lastUser = await mongoose.model('User').findOne().sort({ rollNo: -1 });
+  // Fix: Change 'User' to 'Registered_Students'
+  const lastUser = await mongoose.model('Registered_Students').findOne().sort({ rollNo: -1 });
 
   let newRollNo;
   if (lastUser && lastUser.rollNo.startsWith(currentYear.toString())) {
@@ -110,4 +110,9 @@ userSchema.methods.toJSON = function() {
   return user;
 };
 
-export default mongoose.model('User', userSchema);
+// Add password comparison method
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+export default mongoose.model('Registered_Students', userSchema);
