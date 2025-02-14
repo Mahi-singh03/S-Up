@@ -7,6 +7,7 @@ import ScrollToTop from "./utils/components/ScrollToTop.jsx";
 import Home from "./components/Home.jsx";
 import StudentRegistrationForm from "./components/Register.jsx";
 import LoginForm from "./components/login.jsx";
+import WeeklyExams from "./components/Exams/WeeklyExams.jsx";
 
 
 
@@ -29,7 +30,7 @@ function App() {
         {/* Exams Section */}
         <Route path="/Exams/Exam-Instruction" element={<h1>Exam Instruction</h1>} />
         <Route path="/Exams/Exam-Result" element={<h1>Exam Result</h1>} />
-        <Route path="/Exams/Weekly-Exam" element={<h1>Weekly Exam</h1>} />
+        <Route path="/Exams/Weekly-Exam" element={<WeeklyExams />} />
         <Route path="/Exams/Final-Exam" element={<h1>Final Exam</h1>} />
 
         {/* Verification Section */}
