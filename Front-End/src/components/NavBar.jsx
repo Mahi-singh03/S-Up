@@ -11,7 +11,7 @@ export default function Navbar() {
   
   const secondaryMenuItems = ["Home", "Courses", "Register", "About", "Gallery", "Login", "Logout"];
   const dropdowns = [
-    { name: "Exam", options: ["Exam Instruction", "Exam Result", "Exam"] },
+    { name: "Exams", options: ["Exam Instruction", "Exam Result", "Weekly Exam","Final Exam"] },
     { name: "Verification", options: ["Verify Student", "Verify Staff"] },
     { name: "Resources", options: ["Syllabus", "Study Material"] },
     { name: "Job", options: ["Career Guidance", "Job Apply"] },
