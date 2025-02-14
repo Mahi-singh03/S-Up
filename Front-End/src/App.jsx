@@ -4,6 +4,12 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./utils/components/ScrollToTop.jsx";
 
+import Home from "./components/Home.jsx";
+import StudentRegistrationForm from "./components/Register.jsx";
+import LoginForm from "./components/login.jsx";
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -11,12 +17,12 @@ function App() {
       <Routes>
         {/* Redirect root path to Home */}
         <Route path="/" element={<Navigate to="/Home" />} />
-        <Route path="/Home" element={<h1>Home</h1>} />
+        <Route path="/Home" element={< Home />} />
         <Route path="/Courses" element={<h1>Courses</h1>} />
-        <Route path="/Register" element={<h1>Register</h1>} />
+        <Route path="/Register" element={<StudentRegistrationForm />} />
         <Route path="/About" element={<h1>About</h1>} />
         <Route path="/Gallery" element={<h1>Gallery</h1>} />
-        <Route path="/Login" element={<h1>Login</h1>} />
+        <Route path="/Login" element={<LoginForm />} />
         <Route path="/Logout" element={<h1>Logout</h1>} />
         <Route path="/Profile" element={<h1>Profile</h1>} />
 
@@ -44,6 +50,8 @@ function App() {
         <Route path="/Admin/Manage-Courses" element={<h1>Manage Courses</h1>} />
         <Route path="/Admin/Manage-Exams" element={<h1>Manage Exams</h1>} />
         <Route path="/Admin/Manage-Resources" element={<h1>Manage Resources</h1>} />
+        <Route path="/Admin/Student-Attendence" element={<h1>Student Attendence</h1>} />
+        <Route path="/Admin/Staff-Attendence" element={<h1>Staff Attendence</h1>} />
         
       </Routes>
     </BrowserRouter>
