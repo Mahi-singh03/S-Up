@@ -45,6 +45,50 @@ export const registerUser = async (req, res) => {
     }
 };
 
+// Register admin
+export const registerAdmin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validate required fields
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        // Check if admin already exists
+        const existingAdmin = await Login.findOne({ email: email.toLowerCase(), role: 'admin' });
+        if (existingAdmin) {
+            return res.status(409).json({ error: 'Admin email already registered' });
+        }
+
+        // Create new admin
+        const newAdmin = new Login({
+            email: email.toLowerCase(),
+            password,
+            role: 'admin'
+        });
+
+        await newAdmin.save();
+
+        // Generate token
+        const token = jwt.sign(
+            { id: newAdmin._id, email: newAdmin.email, role: newAdmin.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.status(201).json({
+            message: 'Admin registered successfully',
+            admin: newAdmin.toJSON(),
+            token
+        });
+
+    } catch (error) {
+        console.error('Admin registration error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 // Login user
 export const loginUser = async (req, res) => {
     try {

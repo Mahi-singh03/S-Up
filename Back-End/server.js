@@ -1,26 +1,21 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import config from './config/config.js';
+import connectDB from './lib/connectiondb.js';
+import studentRoutes from './routes/studentsRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
-import registerRoutes from './routes/registrationRoutes.js';
-import jwt from 'jsonwebtoken';
-import loginRoutes from './routes/loginRoutes.js';
-
-// Load environment variables
-dotenv.config();
-
-// Verify JWT_SECRET exists
-if (!process.env.JWT_SECRET) {
-    console.error('JWT_SECRET is not defined in environment variables');
-    process.exit(1);
-}
+import { errorResponse } from './utils/responseHandler.js';
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+// Security middleware
+app.use(helmet());
 app.use(cors());
+app.use(morgan('dev'));
+app.use(express.json());
 
 // Middleware to handle JSON parsing errors
 app.use((err, req, res, next) => {
@@ -42,33 +37,37 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/api/students', studentRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/reviews', reviewRoutes);
-app.use('/api', registerRoutes);
-app.use('/api', loginRoutes);
 
-// Error handling middleware
+// 404 handler
+app.use((req, res) => {
+  errorResponse(res, 'Route not found', 404);
+});
+
+// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? err : {}
-  });
+  errorResponse(
+    res,
+    err.message || 'Internal Server Error',
+    err.status || 500,
+    err
+  );
 });
 
-// Handle 404 routes
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
+// Start server
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(config.port, () => {
+      console.log(`🚀 Server running on port ${config.port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB Connected'))
-.catch((err) => console.error('❌ MongoDB connection error:', err));
-
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`🚀 Server started on port ${PORT}`);
-});
+startServer();

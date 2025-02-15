@@ -1,11 +1,11 @@
 import express from 'express';
-import { registerUser, loginUser, getProfile } from '../controllers/loginController.js';
+import { registerUser, loginUser, getProfile, registerAdmin } from '../controllers/loginController.js';
 import { authenticate, authorizeAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Public routes
-router.post('/admin/register', registerUser);
+router.post('/admin/register', registerAdmin);
 router.post('/admin/login', loginUser);
 
 // Protected routes
